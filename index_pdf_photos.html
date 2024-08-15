@@ -13,155 +13,75 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{{ asset('css/sertifikat-test.css') }}" />
   </head>
   <body>
     <div class="container mt-5">
+        <x-validasi.validasi></x-validasi.validasi>
       <h2 class="mb-4">Upload Certificates</h2>
 
-      <form
-        action="{{ route('certificates.store') }}"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <div
-          id="photo-upload-container"
-          class="d-flex flex-wrap border p-2 mb-3"
-        >
+      <form action="{{ $page_meta['url'] }}" method="POST" enctype="multipart/form-data">
+        @method($page_meta['method'])
+        @csrf
+        <div id="photo-upload-container" class="d-flex flex-wrap border p-2 mb-3">
           <div id="drop-area">
             <p class="text-center">Drag & Drop Photos Here</p>
           </div>
         </div>
 
-        <input
-          type="file"
-          id="photo-input"
-          class="d-none"
-          multiple
-          accept="image/*,application/pdf"
-        />
+        <input type="file" name="file[]" id="photo-input" class="d-none" multiple accept="image/*,application/pdf"/>
         <button type="button" id="add-photo" class="btn btn-secondary mb-3">
           Add Photos
         </button>
 
-        <button type="submit" class="btn btn-primary mb-3">Submit</button>
-      </form>
-    </div>
-
-    <!-- Modal for adding certificate details -->
-    <div
-      class="modal fade"
-      id="certificateDetailModal"
-      tabindex="-1"
-      aria-labelledby="certificateDetailModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="certificateDetailModalLabel">
-              Add Certificate Details
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <img
-              id="modal-image-preview"
-              class="img-fluid mb-3"
-              style="
-                width: 100%;
-                height: 300px;
-                object-fit: cover;
-                display: none;
-              "
-            />
-            <iframe
-              id="modal-pdf-preview"
-              class="w-100 mb-3"
-              style="height: 300px; display: none"
-              frameborder="0"
-            ></iframe>
-            <div class="form-group mb-3">
-              <label for="modal-employee-name">Nama Karyawan:</label>
-              <input
-                type="text"
-                id="modal-employee-name"
-                class="form-control"
-                placeholder="Enter employee name"
-                required
-              />
+         <!-- Modal for adding details -->
+        <div class="modal fade" id="certificateDetailModal" tabindex="-1" aria-labelledby="certificateDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="certificateDetailModalLabel">
+                    Detail Dokumen
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <img id="modal-image-preview" class="img-fluid mb-3" style="width: 100%; height: 300px; object-fit: cover; display: none;"/>
+                <iframe id="modal-pdf-preview" class="w-100 mb-3" style="height: 300px; display: none" frameborder="0"></iframe>
+                <div class="form-group mb-3">
+                    <label for="jenis-dokumen">Jenis Dokumen</label> 
+                    <select id="jenis-dokumen" class="form-select">
+                    <option value="Kompetensi">Kompetensi</option>
+                    <option value="Ijazah">Ijazah</option>
+                    <option value="MCU">MCU</option>
+                    <option value="Dokumen">Dokumen</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="tanggal-dokumen">Tanggal Berakhir</label>
+                    <input type="date" id="tanggal-dokumen" class="form-control" />
+                    <input type="checkbox" id="seumur-hidup" class="me-2"><label for="seumur-hidup">Seumur Hidup</label>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="deskripsi-dokumen">Deskripsi</label>
+                    <textarea id="deskripsi-dokumen" class="form-control" rows="3" required></textarea>
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary" id="save-details">
+                    Save Details
+                </button>
+                </div>
             </div>
-            <div class="form-group mb-3">
-              <label for="modal-grade">Grade:</label>
-              <input
-                type="text"
-                id="modal-grade"
-                class="form-control"
-                placeholder="Enter grade"
-                required
-              />
             </div>
-            <div class="form-group mb-3">
-              <label for="modal-institution">Institusi:</label>
-              <input
-                type="text"
-                id="modal-institution"
-                class="form-control"
-                placeholder="Enter institution"
-                required
-              />
-            </div>
-            <div class="form-group mb-3">
-              <label for="modal-majors">Jurusan:</label>
-              <input
-                type="text"
-                id="modal-majors"
-                class="form-control"
-                placeholder="Enter majors"
-                required
-              />
-            </div>
-            <div class="form-group mb-3">
-              <label for="modal-score">Nilai:</label>
-              <input
-                type="number"
-                id="modal-score"
-                class="form-control"
-                placeholder="Enter score"
-                required
-              />
-            </div>
-            <div class="form-group mb-3">
-              <label for="modal-description">Deskripsi:</label>
-              <textarea
-                id="modal-description"
-                class="form-control"
-                rows="3"
-                placeholder="Enter description"
-                required
-              ></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary" id="save-details">
-              Save Details
-            </button>
-          </div>
         </div>
-      </div>
-    </div>
+
+            <button type="submit" class="btn btn-primary mb-3">Submit</button>
+        
+        </form>
+        </div>
 
     <!-- Bootstrap 5 JavaScript Bundle with Popper -->
     <script
@@ -175,6 +95,6 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="script.js"></script>
+    <script src="{{ asset('js/sertifikatTest.js') }}"></script>
   </body>
 </html>
