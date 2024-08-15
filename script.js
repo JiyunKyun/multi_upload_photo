@@ -140,7 +140,7 @@ document.addEventListener("click", function (event) {
 
         // Populate modal with details
         document.getElementById("jenis-dokumen").value =
-            fileDetails[fileId].name;
+            fileDetails[fileId].jenis_dokumen;
         document.getElementById("tanggal-dokumen").value =
             fileDetails[fileId].tanggal;
         document.getElementById("deskripsi-dokumen").value =
@@ -181,30 +181,39 @@ document.getElementById("save-details").addEventListener("click", function () {
     let modal = bootstrap.Modal.getInstance(
         document.getElementById("certificateDetailModal")
     );
+
     let fileId = document
         .getElementById("certificateDetailModal")
         .getAttribute("data-current-file-id");
 
-    // Save the current values in the modal to the fileDetails object
+    console.log("Saving details for fileId:", fileId);
+
+    // Simpan nilai saat ini dari modal ke dalam objek fileDetails
     fileDetails[fileId] = {
-        ...fileDetails[fileId],
         jenis_dokumen: document.getElementById("jenis-dokumen").value,
         tanggal: document.getElementById("tanggal-dokumen").value,
         description: document.getElementById("deskripsi-dokumen").value,
         seumur_hidup: document.getElementById("seumur-hidup").checked,
     };
 
-    // Update hidden inputs in the respective photo/pdf box
+    console.log("Updated fileDetails:", fileDetails);
+
+    // Perbarui input tersembunyi di kotak foto/pdf yang sesuai
     let parentDiv = document.querySelector(`[data-file-id='${fileId}']`);
-    parentDiv.querySelector(`[name="photos[${fileId}][jenis_dokumen]"]`).value =
-        fileDetails[fileId].jenis_dokumen;
-    parentDiv.querySelector(
-        `[name="photos[${fileId}][tanggal_dokumen]"]`
-    ).value = fileDetails[fileId].tanggal;
-    parentDiv.querySelector(`[name="photos[${fileId}][description]"]`).value =
-        fileDetails[fileId].description;
-    parentDiv.querySelector(`[name="photos[${fileId}][seumur_hidup]"]`).value =
-        fileDetails[fileId].seumur_hidup;
+    if (parentDiv) {
+        parentDiv.querySelector(
+            `[name="photos[${fileId}][jenis_dokumen]"]`
+        ).value = fileDetails[fileId].jenis_dokumen;
+        parentDiv.querySelector(
+            `[name="photos[${fileId}][tanggal_dokumen]"]`
+        ).value = fileDetails[fileId].tanggal;
+        parentDiv.querySelector(
+            `[name="photos[${fileId}][description]"]`
+        ).value = fileDetails[fileId].description;
+        parentDiv.querySelector(
+            `[name="photos[${fileId}][seumur_hidup]"]`
+        ).value = fileDetails[fileId].seumur_hidup;
+    }
 
     modal.hide();
 });
