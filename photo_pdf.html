@@ -13,14 +13,6 @@
       crossorigin="anonymous"
     />
 
-    <!-- Bootstrap Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
-      integrity="sha384-5MWAzdN7BNKgKZh+GRDSEExMGDS7DgFFxjUozUV26d6/TK1zG7ZX5c7/TULi2uev"
-      crossorigin="anonymous"
-    />
-
     <style>
       #photo-upload-container {
         min-height: 200px;
@@ -324,9 +316,14 @@
 
       document.addEventListener("click", function (event) {
         if (event.target.matches(".remove-photo")) {
-          event.target.parentElement.remove();
-          if (document.querySelectorAll(".photo-box, .pdf-box").length === 0) {
-            document.getElementById("drop-area").style.opacity = "1";
+          let elementToRemove = event.target.closest(".photo-box, .pdf-box"); // Improved selector
+          if (elementToRemove) {
+            elementToRemove.remove(); // Remove the element
+            if (
+              document.querySelectorAll(".photo-box, .pdf-box").length === 0
+            ) {
+              document.getElementById("drop-area").style.opacity = "1"; // Show drop area if no photos or PDFs
+            }
           }
         } else if (event.target.matches(".add-detail")) {
           let imgSrc = event.target.parentElement.querySelector("img");
